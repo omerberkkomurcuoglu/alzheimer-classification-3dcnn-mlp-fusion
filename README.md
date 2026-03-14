@@ -17,7 +17,7 @@ Bu proje, **3 sınıflı** Alzheimer tespit görevi için üç farklı sınıfla
 | Model | Girdi | Mimari | Öne Çıkan Özellikler |
 |-------|-------|--------|---------------------|
 | **MLP** | Yalnızca klinik veri | Artık bağlantılı 3 bloklu MLP | Aşamalı CE → Focal Loss, permutation feature importance |
-| **ResNet50** | Yalnızca 3D MRI | MedicalNet ResNet50 (23 medikal veri setiyle ön eğitimli) | 3 fazlı eğitim (ısınma → ince ayar → SWA), TTA |
+| **Custom3DCNN** | Yalnızca 3D MRI | Özel 3D CNN (Residual + SE blokları + GroupNorm) | Sıfırdan eğitim, WeightedRandomSampler, MONAI augmentasyon |
 | **Fusion** | 3D MRI + Klinik veri | Custom3DCNN + MLP, çapraz-modal dikkat | Modalite dropout, derin denetim, dikkat kapıları |
 
 ## 🗂️ Proje Yapısı
@@ -37,11 +37,10 @@ Bitirme_Projesi/
 │   │
 │   ├── train/                      # Model eğitimi ve değerlendirme
 │   │   ├── 13-train_mlp_only.py            # MLP (yalnızca klinik veri)
-│   │   ├── 14.1-train_simplecnn.py         # Özel 3D CNN
-│   │   ├── 14.3-train_resnet50.py          # MedicalNet ResNet50
+│   │   ├── 14.1-train_simplecnn.py         # Custom3DCNN eğitimi
 │   │   ├── 15.0-CustomCnn_MLP_Fusion.py    # CNN + MLP Füzyon modeli
 │   │   ├── 14.2-gradcam_visualize.py       # GradCAM görselleştirme
-│   │   ├── 14.3.1-test_medicalnet_resnet50.py  # ResNet50 test değerlendirmesi
+│   │   ├── 14.2.1-test_customcnn.py        # Custom3DCNN test değerlendirmesi
 │   │   ├── 15.1-test_fusion.py             # Füzyon model test değerlendirmesi
 │   │   ├── 15.2-analyze_modality_importance.py # Modalite ablasyon çalışması
 │   │   ├── custom_model.py                 # Custom3DCNN mimarisi
@@ -67,12 +66,13 @@ Bitirme_Projesi/
 3. **Klinik Özellikler**: Bilişsel testler (UDS bataryası) ve demografik bilgilerden ~72 özellik
 4. **Veri Bölme**: %70/%15/%15 (eğitim/doğrulama/test), veri sızıntısını önlemek için **hasta bazlı gruplama**
 
-### ResNet50 Eğitim Stratejisi
-- **Faz 1**: Baş katman ısınması (omurga dondurulmuş, 15 epoch)
-- **Faz 2a**: Yalnızca layer4 ince ayar (20 epoch, diferansiyel öğrenme oranı)
-- **Faz 2b**: layer3 + layer4 ince ayar (30 epoch)
-- **Faz 3**: Stokastik Ağırlık Ortalaması / SWA (5 epoch)
-- **Değerlendirme**: Test Zamanı Artırma / TTA (5 katlı)
+### Custom3DCNN Mimarisi
+- **Giriş**: 128×128×128 boyutunda tek kanallı 3D MRI hacmi
+- **Katmanlar**: 4 Residual blok (32 → 64 → 128 → 256 kanal)
+- **SE Blokları**: Son 2 katmanda Squeeze-and-Excitation kanal dikkat mekanizması
+- **Normalizasyon**: InstanceNorm3d (girdi) + GroupNorm (katmanlar arası)
+- **Sınıflandırıcı**: Global Average Pooling → FC (256→128→3)
+- **Augmentasyon**: MONAI (Flip, Affine, Noise, Contrast)
 
 ### Füzyon Modeli
 - **Çapraz-Modal Dikkat Kapıları**: MRI ve klinik özelliklerin önemini öğrenir
@@ -107,8 +107,8 @@ python scripts/preprocessing/12-remove_leakage.py
 # MLP (yalnızca klinik veri)
 python scripts/train/13-train_mlp_only.py
 
-# ResNet50 (yalnızca 3D MRI)
-python scripts/train/14.3-train_resnet50.py
+# Custom3DCNN (yalnızca 3D MRI)
+python scripts/train/14.1-train_simplecnn.py
 
 # Füzyon (MRI + Klinik)
 python scripts/train/15.0-CustomCnn_MLP_Fusion.py
@@ -116,7 +116,7 @@ python scripts/train/15.0-CustomCnn_MLP_Fusion.py
 
 ### 3. Değerlendirme
 ```bash
-python scripts/train/14.3.1-test_medicalnet_resnet50.py
+python scripts/train/14.2.1-test_customcnn.py
 python scripts/train/15.1-test_fusion.py
 ```
 
