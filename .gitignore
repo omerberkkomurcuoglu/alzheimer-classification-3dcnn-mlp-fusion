@@ -1,0 +1,32 @@
+# Processed dataset (large .npy files)
+processed_dataset_128/
+
+# Model weights
+scripts/weights/*.pth
+
+# CSV data files
+Csv_Files/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Virtual environments
+venv/
+env/
+.env/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Inference outputs
+Inference/
