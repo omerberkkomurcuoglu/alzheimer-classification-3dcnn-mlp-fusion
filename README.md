@@ -38,7 +38,6 @@ Bitirme_Projesi/
 │   ├── train/                      # Model eğitimi ve değerlendirme
 │   │   ├── 13-train_mlp_only.py            # MLP (yalnızca klinik veri)
 │   │   ├── 14.1-train_simplecnn.py         # Custom3DCNN eğitimi
-│   │   ├── 15.0-CustomCnn_MLP_Fusion.py    # CNN + MLP Füzyon modeli
 │   │   ├── 14.2-gradcam_visualize.py       # GradCAM görselleştirme
 │   │   ├── 14.2.1-test_customcnn.py        # Custom3DCNN test değerlendirmesi
 │   │   ├── 15.1-test_fusion.py             # Füzyon model test değerlendirmesi
@@ -46,12 +45,13 @@ Bitirme_Projesi/
 │   │   ├── custom_model.py                 # Custom3DCNN mimarisi
 │   │   └── mri_pipeline.py                 # MRI yükleme ve normalizasyon araçları
 │   │
-│   ├── website/                    # Streamlit web uygulaması
-│   │   └── scripts/
-│   │       ├── app.py                      # Ana Streamlit uygulaması
-│   │       └── utils.py                    # Yardımcı fonksiyonlar
+│   ├── repo/                       # Yayın için hazır scriptler
+│   │   └── 15.0-CustomCnn_MLP_Fusionmakale.py  # CNN + MLP Füzyon modeli
 │   │
-│   └── repo/                       # Yayın için hazır scriptler
+│   └── website/                    # Streamlit web uygulaması
+│       └── scripts/
+│           ├── app.py                      # Ana Streamlit uygulaması
+│           └── utils.py                    # Yardımcı fonksiyonlar
 │
 ├── Csv_Files/                      # Ham OASIS-3 UDS klinik verileri (repo'da yok)
 ├── processed_dataset_128/          # Ön işlenmiş 128³ MRI hacimleri (repo'da yok)
@@ -111,7 +111,7 @@ python scripts/train/13-train_mlp_only.py
 python scripts/train/14.1-train_simplecnn.py
 
 # Füzyon (MRI + Klinik)
-python scripts/train/15.0-CustomCnn_MLP_Fusion.py
+python scripts/repo/15.0-CustomCnn_MLP_Fusionmakale.py
 ```
 
 ### 3. Değerlendirme
