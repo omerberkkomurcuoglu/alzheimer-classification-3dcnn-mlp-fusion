@@ -1,0 +1,11 @@
+{
+    "iterations": 1000,
+    "depth": 4,
+    "learning_rate": 0.2685324173993989,
+    "l2_leaf_reg": 1.9118022269208863,
+    "bagging_temperature": 4.663690617300036,
+    "random_strength": 2.3766341797469517,
+    "border_count": 33,
+    "min_data_in_leaf": 2,
+    "grow_policy": "SymmetricTree"
+}

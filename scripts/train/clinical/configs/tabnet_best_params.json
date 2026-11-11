@@ -1,0 +1,9 @@
+{
+    "n_da": 64,
+    "n_steps": 6,
+    "gamma": 1.1823991509355174,
+    "lambda_sparse": 0.0028875255176581136,
+    "n_independent": 2,
+    "n_shared": 2,
+    "optimizer_lr": 0.003557443099162337
+}

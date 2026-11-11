@@ -1,10 +1,13 @@
 """
 Shared MRI preprocessing helpers for the project.
 
-The MRI volumes in this repository are already spatially resampled to 128^3.
-What changes most across subjects is intensity distribution, not geometry.
-These helpers keep train/test/fusion scripts on the same foreground-aware
-normalization path.
+The default dataset used by train/test scripts is the output of
+`scripts/preprocessing/10.1-preprocess_dataset_128.py`. Those `.npy` files are
+already resampled, cropped, foreground-normalized, clipped, and padded to 128^3.
+
+For those preprocessed tensors, the correct load path is sanitize-only.
+Foreground normalization is kept as a separate helper for legacy callers that
+still need it.
 """
 
 from __future__ import annotations
@@ -15,6 +18,7 @@ import numpy as np
 
 
 DEFAULT_MRI_SHAPE = (128, 128, 128)
+DEFAULT_AUGMENT_CLIP_RANGE = (-5.0, 5.0)
 LABEL_MAP = {0.0: 0, 0.5: 1, 1.0: 2, 2.0: 2}
 
 
@@ -82,6 +86,30 @@ def load_sanitized_mri_volume(file_path: str, fallback_shape=DEFAULT_MRI_SHAPE) 
     return sanitize_mri_volume(data)
 
 
+def load_preprocessed_mri_volume(file_path: str, fallback_shape=DEFAULT_MRI_SHAPE) -> np.ndarray:
+    """
+    Load a cached `.npy` produced by the offline 10.1 preprocessing pipeline.
+
+    Those files are already normalized, so runtime should only sanitize
+    NaN/Inf values instead of applying another foreground z-score pass.
+    """
+    return load_sanitized_mri_volume(file_path, fallback_shape=fallback_shape)
+
+
 def load_normalized_mri_volume(file_path: str, fallback_shape=DEFAULT_MRI_SHAPE) -> np.ndarray:
     volume = load_sanitized_mri_volume(file_path, fallback_shape=fallback_shape)
     return normalize_mri_volume(volume)
+
+
+def sanitize_augmented_mri_volume(
+    data: np.ndarray,
+    clip_range=DEFAULT_AUGMENT_CLIP_RANGE,
+) -> np.ndarray:
+    """
+    Post-augmentation cleanup used by the 14.3 training pipeline.
+
+    MONAI transforms can introduce NaN/Inf values or push normalized
+    intensities outside the expected range. Keep the tensor float32 and
+    clamp it back to the same foreground-normalized range used elsewhere.
+    """
+    return sanitize_mri_volume(data, clip_range=clip_range)

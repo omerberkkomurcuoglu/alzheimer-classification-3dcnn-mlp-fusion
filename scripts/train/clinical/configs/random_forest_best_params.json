@@ -1,0 +1,9 @@
+{
+    "n_estimators": 800,
+    "max_depth": 18,
+    "min_samples_split": 12,
+    "min_samples_leaf": 9,
+    "max_features": "sqrt",
+    "class_weight": "balanced",
+    "criterion": "entropy"
+}

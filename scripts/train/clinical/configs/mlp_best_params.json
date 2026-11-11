@@ -1,0 +1,19 @@
+{
+    "trial_number": 45,
+    "best_score": 82.25668777788019,
+    "params": {
+        "n_layers": 3,
+        "units_l0": 448,
+        "units_l1": 512,
+        "units_l2": 416,
+        "dropout": 0.4477957591850093,
+        "lr": 0.0005176916263855774,
+        "weight_decay": 0.0012369545635076591,
+        "label_smoothing": 0.04830168798378716,
+        "sampler_power": 0.6824890566178236,
+        "use_residual": false,
+        "batch_size": 32,
+        "scheduler_T0": 15,
+        "use_ema": false
+    }
+}

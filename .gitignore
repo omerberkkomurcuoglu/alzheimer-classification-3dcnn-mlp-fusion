@@ -1,8 +1,32 @@
+# Local backup of legacy/intermediate files
+_archive_backup/
+
 # Processed dataset (large .npy files)
 processed_dataset_128/
+data/
 
-# Model weights
-scripts/weights/*.pth
+# Model weights (avoid GitHub 100MB file size limit)
+*.pth
+*.cbm
+*.pkl
+*.zip
+scripts/train/fusion/weights/
+scripts/train/mr/weights/
+scripts/train/mr/logs/
+scripts/train/clinical/weights/
+
+# Patent & draft documents
+*.doc
+*.docx
+alzheimer_makale_v6*
+
+# Flutter / Mobile build & cache directories
+mobil-app/frontend/build/
+mobil-app/frontend/android/build/
+mobil-app/frontend/.dart_tool/
+mobil-app/frontend/.idea/
+mobil-app/frontend/android/.gradle/
+mobil-app/frontend/android/local.properties
 
 # CSV data files
 Csv_Files/
